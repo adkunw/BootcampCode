@@ -28,12 +28,8 @@ rl.question("Siapa nama kamu? ", (name) => {
       // Membuat objek yang berisi data yang dimasukkan oleh pengguna
       const result = { name, mobile, email };
 
-      const file = fs.readFileSync("data/contacts.json", "utf-8");
-      const contacts = JSON.parse(file);
-      contacts.push(result);
-
       // Menyimpan objek sebagai JSON string ke dalam file "test.txt"
-      fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
+      fs.writeFileSync("test.txt", JSON.stringify(result, null, 2));
 
       // Menutup interface readline
       rl.close();
