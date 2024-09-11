@@ -1,10 +1,10 @@
-# Bootcamp Node.js & React.js Code Repository
+# Geeksfarm Bootcamp Node.js & React.js Code Repository
 
-Welcome to the official repository for the **Node.js & React.js Bootcamp**! 🎉
+Welcome to the official repository for the **Node.js & React.js Geeksfarm Bootcamp**! 🎉
 
 ## 📚 About
 
-This repository serves as the central storage for all the code created and shared during the Node.js & React.js Bootcamp. Whether you're a participant looking to review the material or a curious developer exploring the content, you'll find everything you need here.
+This repository serves as the central storage for all the code created and shared during the Node.js & React.js Geeksfarm Bootcamp. Whether you're a participant looking to review the material or a curious developer exploring the content, you'll find everything you need here.
 
 ## 🛠️ Technologies Covered
 
