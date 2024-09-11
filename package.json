@@ -1,0 +1,24 @@
+{
+  "name": "bootcamp",
+  "version": "1.0.0",
+  "description": "Welcome to the official repository for the **Node.js & React.js Bootcamp**! 🎉",
+  "main": "01.Writefile-Readfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "git:add-commit-push": "node scripts/git-commit.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adkunw/BootcampCode.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adkunw/BootcampCode/issues"
+  },
+  "homepage": "https://github.com/adkunw/BootcampCode#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10",
+    "validator": "^13.12.0"
+  }
+}
