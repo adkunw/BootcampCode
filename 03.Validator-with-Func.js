@@ -3,6 +3,8 @@ const fs = require("fs");
 const readline = require("node:readline");
 const { stdin: input, stdout: output } = require("node:process");
 
+const { add_data, save_data } = require("./src/services/crud");
+
 // Membuat interface untuk membaca input dari command line
 const rl = readline.createInterface({ input, output });
 
@@ -25,16 +27,12 @@ rl.question("Siapa nama kamu? ", (name) => {
         return;
       }
 
-      // Membuat objek yang berisi data yang dimasukkan oleh pengguna
-      const result = { name, mobile, email };
+      const data = add_data(name, mobile, email);
+      save_data(data);
 
-      // Menyimpan objek sebagai JSON string ke dalam file "test.txt"
-      fs.writeFileSync("test.txt", JSON.stringify(result, null, 2));
-
-      // Menutup interface readline
       rl.close();
 
-      console.log("Data berhasil disimpan ke dalam test.txt");
+      console.log("Data berhasil disimpan ke dalam contacts.json");
     });
   });
 });

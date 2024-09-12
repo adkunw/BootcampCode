@@ -5,7 +5,7 @@
   "main": "01.Writefile-Readfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "git:add-commit-push": "node scripts/git-commit.js"
+    "git:add-commit-push": "node src/scripts/git-commit.js"
   },
   "repository": {
     "type": "git",

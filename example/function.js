@@ -8,7 +8,7 @@ generate_nama("Zakiy", "0813123123123");
 
 //FUNCTION RETURN
 function generate_nama_return(nama, mobile) {
-  const text = `Nama saya adalah ${nama}, nomor telp saya adalah ${mobile}`;
+  text = `Nama saya adalah ${nama}, nomor telp saya adalah ${mobile}`;
   return text;
 }
 
