@@ -18,13 +18,19 @@ const renderHTML = (path, res) => {
 http
   .createServer((req, res) => {
     const url = req.url;
+    console.log(url);
 
     if (url === "/about") {
       renderHTML("./src/page/about.html", res);
     } else if (url === "/contact") {
       renderHTML("./src/page/contact.html", res);
-    } else {
+    } else if (url === "/") {
       renderHTML("./src/page/index.html", res);
+    } else {
+      res.writeHead(404);
+      res.write("Error: Page not found");
+      console.log(err);
+      res.end();
     }
   })
   .listen(3000, () => {
