@@ -1,0 +1,24 @@
+<%- include('layout/header') %> <%- include('layout/nav') %>
+
+<!-- Main Content Section -->
+<div class="container mt-4">
+  <h1>CONTACT PAGE</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% contacts.forEach(contact => { %>
+      <tr>
+        <td><%= contact.name %></td>
+        <td><%= contact.email %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('layout/footer') %>
