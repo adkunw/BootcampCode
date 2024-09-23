@@ -1,5 +1,4 @@
 const express = require("express");
-const { questionNewPassword } = require("readline-sync");
 const app = express();
 const port = 3000;
 

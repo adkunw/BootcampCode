@@ -1,0 +1,23 @@
+<!-- Main Content Section -->
+<div class="container mt-4">
+  <h1>CONTACT PAGE</h1>
+  <table class="table">
+    <% if (contacts.length <1) { %>
+    <p>Contact data Emplty</p>
+    <% } else { %>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% contacts.forEach(contact => { %>
+      <tr>
+        <td><%= contact.name %></td>
+        <td><%= contact.email %></td>
+      </tr>
+      <% })} %>
+    </tbody>
+  </table>
+</div>
