@@ -3,7 +3,13 @@ const yargs = require("yargs");
 
 // Import fungsi dirCheck, fileCheck, add_data, save_data, dan read_data dari file utilitas dan layanan (CRUD)
 const { dirCheck, fileCheck } = require("./src/utils/jsonUtils");
-const { add_data, save_data, read_data } = require("./src/services/crud");
+const {
+  add_data,
+  save_data,
+  read_data,
+  delete_data,
+  update_data,
+} = require("./src/services/crud");
 
 // Tentukan path untuk direktori dan file yang akan digunakan untuk menyimpan data kontak
 const dirPath = "./data";

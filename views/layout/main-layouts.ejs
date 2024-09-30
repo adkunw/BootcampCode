@@ -11,10 +11,47 @@
       rel="stylesheet"
     />
     <style>
+      /* Tambahan CSS untuk mempercantik tampilan */
+      .about-section {
+        background-color: #f8f9fa;
+        padding: 50px 0;
+      }
+      .about-section h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .profile-image {
+        border-radius: 50%;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .profile-description h2 {
+        font-size: 1.75rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      .profile-description p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+      }
+      .contact-btn {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+      .contact-btn:hover {
+        background-color: #0056b3;
+        color: #fff;
+      }
+
       /* Add custom animation to nav-links */
       .nav-link {
-        position: relative;
-        transition: color 0.3s ease;
+        transition: color 0.3s ease, background-color 0.3s ease;
       }
 
       /* Simple underline effect */
@@ -36,8 +73,13 @@
 
       /* Smooth color transition */
       .nav-link:hover {
-        color: #f0a500;
-        transition: color 0.3s ease;
+        color: #fff; /* Mengubah warna teks saat hover */
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.2
+        ); /* Efek transparan saat hover */
       }
 
       /* Navbar shadow effect */

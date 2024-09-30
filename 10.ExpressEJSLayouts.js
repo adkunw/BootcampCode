@@ -24,6 +24,12 @@ fileCheck(filePath); // Mengecek dan membuat file JSON jika belum ada
 app.set("view engine", "ejs");
 // Menggunakan express-ejs-layouts untuk mendukung layout EJS
 app.use(expressLayouts);
+app.use(express.static("public"));
+
+app.use((req, res, next) => {
+  console.log("Time :", Date.now());
+  next();
+});
 
 // Route untuk halaman utama (home)
 app.get("/", (req, res) => {
@@ -39,11 +45,17 @@ app.get("/", (req, res) => {
 
 // Route untuk halaman About
 app.get("/about", (req, res) => {
-  // Render halaman "about2.ejs" dengan layout "main-layouts.ejs"
-  res.render("about2", {
-    layout: "layout/main-layouts", // Menggunakan layout utama
-    title: "About Page", // Title untuk halaman about
-  });
+  try {
+    // Misalkan kamu memang tidak punya file about3.ejs
+    res.render("about2", {
+      layout: "layout/main-layouts", // Menggunakan layout utama
+      title: "About Page", // Title untuk halaman about
+    });
+  } catch (error) {
+    // Ini akan tertangkap jika file "about3.ejs" tidak ada atau terjadi kesalahan saat rendering
+    console.log("page error:", error.message); // Muncul error beserta pesannya
+    res.status(500).send("Terjadi kesalahan pada halaman About");
+  }
 });
 
 // Route untuk halaman Contact

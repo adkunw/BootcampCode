@@ -1,5 +1,150 @@
 <!-- Main Content Section -->
 <div class="container mt-4">
-  <h1>Welcome to My Page</h1>
-  Kamu adalah <%= nama %>
+  <h1 class="mb-4">Welcome to My Page</h1>
+
+  <div class="row">
+    <!-- Kartu 1: Statistik Pengguna -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Total Pengguna</h5>
+          <p class="card-text">Jumlah pengguna terdaftar di sistem.</p>
+          <h2 class="display-4">1500</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kartu 2: Total Kontak -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Total Kontak</h5>
+          <p class="card-text">Jumlah kontak yang telah ditambahkan.</p>
+          <h2 class="display-4">300</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kartu 3: Tugas Terselesaikan -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Tugas Terselesaikan</h5>
+          <p class="card-text">
+            Jumlah tugas yang telah diselesaikan hari ini.
+          </p>
+          <h2 class="display-4">25</h2>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+
+
+  
+  </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Data untuk grafik bulanan
+  const monthlyLabels = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  const monthlyData = [
+    120, 150, 170, 200, 220, 180, 160, 200, 230, 250, 270, 300,
+  ];
+
+  // Inisialisasi grafik bulanan
+  const ctx1 = document.getElementById("monthlyStats").getContext("2d");
+  const monthlyStatsChart = new Chart(ctx1, {
+    type: "line",
+    data: {
+      labels: monthlyLabels,
+      datasets: [
+        {
+          label: "Pengguna Terdaftar",
+          data: monthlyData,
+          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          fill: true,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Statistik Pengguna Bulanan",
+        },
+      },
+    },
+  });
+
+  // Data untuk grafik kategori kontak
+  const categoryLabels = ["Keluarga", "Teman", "Rekan Kerja", "Klien"];
+  const categoryData = [30, 50, 15, 20];
+
+  // Inisialisasi grafik kategori
+  const ctx2 = document.getElementById("categoryStats").getContext("2d");
+  const categoryStatsChart = new Chart(ctx2, {
+    type: "bar",
+    data: {
+      labels: categoryLabels,
+      datasets: [
+        {
+          label: "Jumlah Kontak",
+          data: categoryData,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Kontak Berdasarkan Kategori",
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+</script>
