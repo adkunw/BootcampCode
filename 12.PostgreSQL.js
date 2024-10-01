@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 // Menetapkan port aplikasi (3000)
 const port = 3000;
-const ipAddress = "10.10.101.134";
+const ipAddress = "localhost";
 // Memanggil modul express-ejs-layouts untuk mengelola layout pada EJS (Embedded JavaScript)
 const expressLayouts = require("express-ejs-layouts");
 
@@ -14,7 +14,6 @@ const { dirCheck, fileCheck } = require("./src/utils/jsonUtils");
 const {
   read_data,
   add_data,
-  save_data,
   update_data,
   delete_data,
 } = require("./src/services/crudDB");
@@ -35,26 +34,7 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-
-// app.use((req, res, next) => {
-//   console.log("Time :", Date.now());
-//   next();
-// });
-
-app.get("/addasync", async (req, res) => {
-  try {
-    const name = "kunto";
-    const mobile = "081312312312";
-    const email = "adkw@asdas.com";
-    const newContact = await pool.query(
-      `INSERT INTO contacts values 
-      ('${name}','${mobile}','${email}') RETURNING *`
-    );
-    res.json(newContact);
-  } catch (error) {
-    console.log(error.message);
-  }
-});
+app.use(express.json());
 
 // Route untuk halaman utama (home)
 app.get("/", (req, res) => {
@@ -84,9 +64,9 @@ app.get("/about", (req, res) => {
 });
 
 // Route untuk halaman Contact
-app.get("/contact", (req, res) => {
+app.get("/contact", async (req, res) => {
   // Membaca data kontak dari file JSON
-  contacts = read_data(filePath).reverse();
+  contacts = await read_data(filePath);
   console.log(contacts);
   // Render halaman "contact2.ejs" dengan data kontak yang dibaca dari JSON dan layout utama
   res.render("contact2", {
@@ -97,18 +77,19 @@ app.get("/contact", (req, res) => {
 });
 
 // Rute POST untuk menambahkan data kontak
-app.post("/contact/add", (req, res) => {
+app.post("/contact/add", async (req, res) => {
   const { name, mobile, email } = req.body;
 
-  // Panggil fungsi add_data dari services/crud
   try {
-    add_data(name, mobile, email, filePath);
-    // if (contact) {
-    //   // Jika kontak berhasil divalidasi, simpan ke dalam file
-    //   save_data(contact, filePath);
-    //   console.log("Data berhasil disimpan.");
-    // }
-    res.redirect("/contact"); // Setelah sukses menambah, redirect ke halaman kontak
+    // Panggil fungsi add_data dari services/crud
+    const isAdded = await add_data(name, mobile, email); // Menggunakan await
+
+    if (isAdded) {
+      console.log("Data berhasil disimpan.");
+      res.redirect("/contact"); // Setelah sukses menambah, redirect ke halaman kontak
+    } else {
+      res.status(400).send("Gagal menambahkan data, validasi tidak lolos.");
+    }
   } catch (error) {
     console.error("Error adding contact:", error);
     res.status(500).send("Internal Server Error");
@@ -116,36 +97,44 @@ app.post("/contact/add", (req, res) => {
 });
 
 // Rute untuk mengupdate kontak
-app.post("/contact/update/:name", (req, res) => {
+app.post("/contact/update/:name", async (req, res) => {
   const { name } = req.params; // Nama kontak yang akan diupdate
   const { newName, mobile, email } = req.body; // Ambil data dari form
 
-  // Update data
-  update_data(name, newName, mobile, email, filePath);
-  res.redirect("/contact"); // Setelah sukses menambah, redirect ke halaman kontak
+  try {
+    const isUpdated = await update_data(name, newName, mobile, email); // Menggunakan await
+
+    if (isUpdated) {
+      res.redirect("/contact"); // Setelah sukses memperbarui, redirect ke halaman kontak
+    } else {
+      res
+        .status(400)
+        .send(
+          "Gagal mengupdate data, validasi tidak lolos atau kontak tidak ditemukan."
+        );
+    }
+  } catch (error) {
+    console.error("Error updating contact:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Rute untuk menghapus kontak
-app.post("/contact/delete/:name", (req, res) => {
+app.post("/contact/delete/:name", async (req, res) => {
   const { name } = req.params; // Nama kontak yang akan dihapus
 
-  // Hapus data
-  const contacts = read_data(filePath);
-  const newContacts = contacts.filter(
-    (contact) => contact.name.toLowerCase() !== name.toLowerCase()
-  );
+  try {
+    const isDeleted = await delete_data(name); // Menggunakan await
 
-  // Simpan data yang sudah diperbarui
-  save_data(newContacts, filePath);
-  res.redirect("/contact"); // Setelah sukses menambah, redirect ke halaman kontak
-});
-
-// Route dinamis untuk produk berdasarkan product ID dan optional category ID (dengan query string)
-app.get("/product/:prodID", (req, res) => {
-  // Mengirim response dengan product ID yang diterima dari URL dan category ID dari query string
-  res.send(
-    `product ID : ${req.params.prodID} <br>category ID : ${req.query.catID}`
-  );
+    if (isDeleted) {
+      res.redirect("/contact"); // Setelah sukses menghapus, redirect ke halaman kontak
+    } else {
+      res.status(400).send("Kontak tidak ditemukan.");
+    }
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Route untuk menangani halaman yang tidak ditemukan (404 error)

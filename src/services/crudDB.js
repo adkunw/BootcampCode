@@ -1,127 +1,137 @@
-const fs = require("fs");
 const validator = require("validator");
+const pool = require("../../db");
 
 // FUNCTION READ DATA
-function read_data(filePath) {
+async function read_data() {
   try {
-    const file = fs.readFileSync(filePath, "utf-8");
-    const contacts = JSON.parse(file);
-    return contacts;
+    const contactList = await pool.query(`SELECT * FROM contacts`);
+    return contactList.rows; // Mengembalikan hasil query
   } catch (error) {
-    console.error("Error reading the file:", error);
-    return []; // Mengembalikan array kosong jika file tidak dapat dibaca
+    console.error("Error reading the data:", error);
+    return []; // Mengembalikan array kosong jika terjadi kesalahan
+  }
+}
+
+// FUNCTION GET SINGLE DATA BY NAME
+async function get_data_by_name(name) {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM contacts WHERE LOWER(name) = LOWER($1)`,
+      [name]
+    );
+    return result.rows[0] || null; // Mengembalikan objek kontak atau null jika tidak ditemukan
+  } catch (error) {
+    console.error("Error getting the contact by name:", error);
+    return null; // Mengembalikan null jika terjadi kesalahan
   }
 }
 
 // FUNCTION ADD DATA
-function add_data(name, mobile, email, filePath) {
-  // Baca data dari file
-  const contacts = read_data(filePath);
+async function add_data(name, mobile, email) {
+  try {
+    // Validasi nomor telepon
+    if (!validator.isMobilePhone(mobile, "id-ID")) {
+      console.log(
+        "Nomor telepon tidak valid. Silakan masukkan nomor yang benar."
+      );
+      return false; // Jika nomor tidak valid, return false
+    }
 
-  const low = name.toLowerCase();
+    // Validasi email jika diberikan
+    if (email && !validator.isEmail(email)) {
+      console.log(
+        "Alamat email tidak valid. Silakan masukkan email yang benar."
+      );
+      return false; // Jika email tidak valid, return false
+    }
 
-  // Validasi: cek apakah nama sudah ada di kontak
-  const isNameExist = contacts.some(
-    (contact) => contact.name.toLowerCase() === low
-  );
-  if (isNameExist) {
-    console.log(`Nama ${name} sudah ada. Silakan gunakan nama lain.`);
-    return false; // Jika nama sudah ada, return false
-  }
+    // Cek apakah nama sudah ada di database
+    const existingContact = await get_data_by_name(name); // Menggunakan fungsi baru
 
-  // Validasi nomor telepon
-  if (!validator.isMobilePhone(mobile, "id-ID")) {
-    console.log(
-      "Nomor telepon tidak valid. Silakan masukkan nomor yang benar."
+    if (existingContact) {
+      console.log(`Nama ${name} sudah ada. Silakan gunakan nama lain.`);
+      return false; // Jika nama sudah ada, return false
+    }
+
+    // Jika validasi berhasil, tambahkan data ke kontak
+    await pool.query(
+      `INSERT INTO contacts (name, mobile, email) VALUES ($1, $2, $3)`,
+      [name, mobile, email || null]
     );
-    return false; // Jika nomor tidak valid, return false
+    console.log(`Kontak ${name} berhasil ditambahkan.`);
+    return true; // Kembalikan true jika berhasil
+  } catch (error) {
+    console.error("Error adding the contact:", error);
+    return false; // Mengembalikan false jika terjadi kesalahan
   }
-
-  // Validasi email jika diberikan
-  if (email && !validator.isEmail(email)) {
-    console.log("Alamat email tidak valid. Silakan masukkan email yang benar.");
-    return false; // Jika email tidak valid, return false
-  }
-
-  // Jika validasi berhasil, tambahkan data ke kontak
-  const result = { name, mobile, email: email || null }; // Simpan null jika email tidak ada
-  contacts.push(result);
-  save_data(contacts, filePath); // Simpan perubahan
-  return true; // Kembalikan true jika berhasil
-}
-
-// FUNCTION SAVE DATA
-function save_data(data, filePath) {
-  fs.writeFileSync(filePath, JSON.stringify(data));
 }
 
 // FUNCTION DELETE DATA
-function delete_data(name, filePath) {
-  // Baca data dari file
-  const contacts = read_data(filePath);
+async function delete_data(name) {
+  try {
+    const result = await pool.query(
+      `DELETE FROM contacts WHERE LOWER(name) = LOWER($1) RETURNING *`,
+      [name]
+    );
 
-  // Mencari kontak berdasarkan nama (case-insensitive)
-  const newContacts = contacts.filter(
-    (contact) => contact.name.toLowerCase() !== name.toLowerCase()
-  );
+    if (result.rowCount === 0) {
+      console.log(`Kontak dengan nama ${name} tidak ditemukan.`);
+      return false; // Kembalikan false jika kontak tidak ditemukan
+    }
 
-  // Mengecek apakah ada kontak yang terhapus
-  if (newContacts.length === contacts.length) {
-    console.log(`Kontak dengan nama ${name} tidak ditemukan.`);
-    return false; // Kembalikan false jika tidak ditemukan
-  } else {
-    save_data(newContacts, filePath); // Simpan data yang sudah diperbarui setelah penghapusan
     console.log(`Kontak dengan nama ${name} berhasil dihapus.`);
     return true; // Kembalikan true jika berhasil
+  } catch (error) {
+    console.error("Error deleting the contact:", error);
+    return false; // Mengembalikan false jika terjadi kesalahan
   }
 }
 
 // FUNCTION UPDATE DATA
-function update_data(oldName, newName, mobile, email, filePath) {
-  // Baca data dari file
-  const contacts = read_data(filePath);
+async function update_data(oldName, newName, mobile, email) {
+  try {
+    // Validasi nomor telepon
+    if (mobile && !validator.isMobilePhone(mobile, "id-ID")) {
+      console.log(
+        "Nomor telepon tidak valid. Silakan masukkan nomor yang benar."
+      );
+      return false; // Jika nomor tidak valid, return false
+    }
 
-  // Mencari index kontak yang akan diupdate
-  const index = contacts.findIndex(
-    (contact) => contact.name.toLowerCase() === oldName.toLowerCase()
-  );
+    // Validasi email jika diberikan
+    if (email && !validator.isEmail(email)) {
+      console.log(
+        "Alamat email tidak valid. Silakan masukkan email yang benar."
+      );
+      return false; // Jika email tidak valid, return false
+    }
 
-  if (index === -1) {
-    console.log(`Kontak dengan nama ${oldName} tidak ditemukan.`);
-    return false; // Kembalikan false jika tidak ditemukan
-  }
-
-  // Validasi nomor telepon
-  if (!validator.isMobilePhone(mobile, "id-ID")) {
-    console.log(
-      "Nomor telepon tidak valid. Silakan masukkan nomor yang benar."
+    // Mencari kontak berdasarkan nama (case-insensitive)
+    const result = await pool.query(
+      `UPDATE contacts 
+       SET name = $1, mobile = $2, email = $3 
+       WHERE LOWER(name) = LOWER($4) RETURNING *`,
+      [newName || oldName, mobile || null, email || null, oldName]
     );
-    return false; // Jika nomor tidak valid, return false
+
+    if (result.rowCount === 0) {
+      console.log(`Kontak dengan nama ${oldName} tidak ditemukan.`);
+      return false; // Kembalikan false jika kontak tidak ditemukan
+    }
+
+    console.log(`Kontak ${oldName} berhasil diperbarui.`);
+    return true; // Kembalikan true jika berhasil
+  } catch (error) {
+    console.error("Error updating the contact:", error);
+    return false; // Mengembalikan false jika terjadi kesalahan
   }
-
-  // Validasi email jika diberikan
-  if (email && !validator.isEmail(email)) {
-    console.log("Alamat email tidak valid. Silakan masukkan email yang benar.");
-    return false; // Jika email tidak valid, return false
-  }
-
-  // Update data kontak
-  contacts[index] = {
-    name: newName || contacts[index].name,
-    mobile: mobile || contacts[index].mobile,
-    email: email || contacts[index].email,
-  };
-
-  save_data(contacts, filePath); // Simpan perubahan
-  console.log(`Kontak ${oldName} berhasil diperbarui.`);
-  return true; // Kembalikan true jika berhasil
 }
 
 // EXPORT FUNCTION
 module.exports = {
   add_data,
-  save_data,
   read_data,
   delete_data,
   update_data,
+  get_data_by_name,
 };
