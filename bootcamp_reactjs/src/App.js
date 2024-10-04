@@ -4,13 +4,15 @@ import Navbar from "./nav";
 
 import Hello from "./1.ComponentBaseReactJS";
 import Comment from "./2.Comment";
+import Count from "./3.State";
 
 function App() {
   return (
     <div className="App">
       <Navbar />
       <Hello />
-      <Comment />
+      {/* <Comment /> */}
+      <Count />
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
