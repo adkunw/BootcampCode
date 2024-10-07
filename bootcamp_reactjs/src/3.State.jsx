@@ -10,8 +10,7 @@ class Counting extends React.Component {
     render() {
         return (
             <div>
-                return
-                <h1>You Clicked {this.state.count} times</h1>;
+                <h1>You Clicked {this.state.count} times</h1>
                 <button onClick={() => this.setState({ count: this.state.count + 1 })}>click on me!</button>
             </div>
         )

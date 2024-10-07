@@ -3,8 +3,9 @@ import "./App.css";
 import Navbar from "./nav";
 
 import Hello from "./1.ComponentBaseReactJS";
-import Comment from "./2.Comment";
+// import Comment from "./2.Comment";
 import Count from "./3.State";
+import InputData from "./4.Input";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Hello />
       {/* <Comment /> */}
       <Count />
+      <InputData />
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

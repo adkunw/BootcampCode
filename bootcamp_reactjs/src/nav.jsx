@@ -1,5 +1,6 @@
 // ./src/nav.jsx
 import React from 'react';
+import Clock from './4.Clock'
 
 const Navbar = () => {
   return (
@@ -17,6 +18,11 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
+        <div className="d-flex align-items-center">
+          <Clock />
+        </div>
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
