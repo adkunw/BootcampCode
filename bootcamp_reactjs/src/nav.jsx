@@ -34,6 +34,9 @@ const Navbar = () => {
             <li className="nav-item">
               <a className="nav-link" href="/contact">Contact</a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/youtube">YouTube</a>
+            </li>
             {/* Tambahkan item menu lainnya sesuai kebutuhan */}
           </ul>
         </div>

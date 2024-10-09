@@ -1,35 +1,20 @@
-// import logo from "./logo.svg";
 import "./App.css";
 import Navbar from "./nav";
-
-import Hello from "./1.ComponentBaseReactJS";
-// import Comment from "./2.Comment";
-import Count from "./3.State";
-import InputData from "./4.Input";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AxiosYoutube from "./5.axiosYoutube";
+import Home from "./home";
+import About from "./about";
 
 function App() {
   return (
-    <div className="App">
+    <Router>
       <Navbar />
-      <Hello />
-      {/* <Comment /> */}
-      <Count />
-      <InputData />
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-    </div>
+      <Routes>
+        <Route path="/" exact element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/youtube" element={<AxiosYoutube />} />
+      </Routes>
+    </Router>
   );
 }
 
